@@ -13,6 +13,7 @@ struct ListRowView: View {
         HStack{
             Image(systemName: "checkmark.circle")
             Text(title)
+                .font(.headline)
             Spacer()
         }
     }

@@ -9,22 +9,25 @@ import Foundation
 
 class ListVieModel : ObservableObject{
     
-    @Published var items: [ItemModel] = []
+    @Published var items: [ItemModel] = [] {
+        didSet {
+            saveItems()
+        }
+    }
+    
+    
+    let itemsKey : String = "items_list"
     
     init() {
         getItems()
     }
     
     func getItems(){
-        let newItems = [
-            ItemModel(title: "Hello", isCompleted: true),
-            ItemModel(title: "What are you going", isCompleted: false),
-            ItemModel(title: "Todo app", isCompleted: false),
-            ItemModel(title: "This is app", isCompleted: true),
-            ItemModel(title: "Awesome", isCompleted: false),
-            ItemModel(title: "Mobile Application world", isCompleted: true)
-            ]
-        items.append(contentsOf: newItems)
+        
+        guard let data = UserDefaults.standard.data(forKey: itemsKey),
+              let savedItems = try? JSONDecoder().decode([ItemModel].self, from: data)
+        else {return }
+        self.items = savedItems
     }
     func deleteItem(indexSet : IndexSet) {
         items.remove(atOffsets: indexSet)
@@ -48,6 +51,12 @@ class ListVieModel : ObservableObject{
        if let index = items.firstIndex(where: {$0.id == item.id} ){
            items[index] = item.updateCompletion()
        }
+    }
+    
+    func saveItems() {
+        if let encodeData = try? JSONEncoder().encode(items){
+            UserDefaults.standard.set(encodeData, forKey: itemsKey)
+        }
     }
     
 }

@@ -8,15 +8,16 @@
 import SwiftUI
 
 @main
-struct TodoAppApp: App {
+struct TodoApp: App {
     let persistenceController = PersistenceController.shared
-
+   @StateObject var listViewModel : ListVieModel = ListVieModel()
     var body: some Scene {
         WindowGroup {
             NavigationStack{
                 ListView()
             }
                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+               .environmentObject(listViewModel)
         }
     }
 }

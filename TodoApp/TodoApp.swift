@@ -17,6 +17,7 @@ struct TodoApp: App {
                 ListView()
             }
                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+               .self.navigationViewStyle(StackNavigationViewStyle())
                .environmentObject(listViewModel)
         }
     }
